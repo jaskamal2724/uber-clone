@@ -38,13 +38,13 @@ const SearchSection = () => {
         };
       
         const docRef = doc(db, "users", "list");
-        console.log(docRef)
         const docSnap = await getDoc(docRef);
       
         if (docSnap.exists()) {
           const existingData = docSnap.data().users || [];
           const updatedData = [...existingData, newData];
           await updateDoc(docRef, { users: updatedData });
+          console.log("USER DATA ADDED")
         } 
         else {
           // initialize the array properly when creating new doc
