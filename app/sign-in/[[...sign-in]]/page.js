@@ -6,7 +6,7 @@ export default function Page() {
     <>
       <div>
         <Image
-          src="/banner.jpg"
+          src="https://images.pexels.com/photos/31513490/pexels-photo-31513490/free-photo-of-red-uber-taxi-on-busy-urban-street.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           alt=""
           width={900}
           height={1000}

@@ -39,7 +39,7 @@ const InputItem = ({ type }) => {
           status === "OK" &&
           placeDetails.geometry &&
           placeDetails.geometry.location
-        ) {
+        ) {location
           const lat = placeDetails.geometry.location.lat();
           const lng = placeDetails.geometry.location.lng();
 
@@ -50,7 +50,7 @@ const InputItem = ({ type }) => {
             label: placeDetails.name,
           };
 
-          console.log(`${type} location:`, payload);
+          // console.log(`${type} location:`, payload);
 
           if (type === "source") {
             setSource(payload);

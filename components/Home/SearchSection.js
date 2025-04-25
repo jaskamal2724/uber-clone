@@ -5,6 +5,9 @@ import GoogleWrapper from "./GoogleWrapper";
 import { SourceContext } from "@/context/SourceContext";
 import { DestinationContext } from "@/context/DestinationContext";
 import CarListOptions from "./CarListOptions";
+import axios from "axios";
+import {  getDoc, updateDoc, setDoc, doc } from "firebase/firestore";
+import {db} from "../../firebase"
 
 const SearchSection = () => {
   const { Source } = useContext(SourceContext);
@@ -12,20 +15,52 @@ const SearchSection = () => {
   const [distance, setDistance] = useState(null);
   const [rideType, setRideType] = useState("now");
 
-  const calculateDistance = () => {
+  let id=""
+
+  const user = async () => {
+    const response = await axios.get("/api/getuser")
+    console.log("USER ID ",response.data.id)
+    id=response.data.id
+  }
+
+  const calculateDistance = async () => {
     if (Source && Destination) {
       const dist = google.maps.geometry.spherical.computeDistanceBetween(
         new google.maps.LatLng(Source.lat, Source.lng),
         new google.maps.LatLng(Destination.lat, Destination.lng)
       );
+
       setDistance(dist * 0.01); // Convert meters to kilometers
+      try {
+        const newData = {
+          source: Source.name,
+          destination: Destination.name
+        };
+      
+        const docRef = doc(db, "users", "list");
+        console.log(docRef)
+        const docSnap = await getDoc(docRef);
+      
+        if (docSnap.exists()) {
+          const existingData = docSnap.data().users || [];
+          const updatedData = [...existingData, newData];
+          await updateDoc(docRef, { users: updatedData });
+        } 
+        else {
+          // initialize the array properly when creating new doc
+          await setDoc(docRef, { users: [newData] });
+          console.log("New document created with user data.");
+        }
+      } catch (error) {
+        console.log("Error storing in DB:", error);
+      }
     }
+    
   };
 
   useEffect(() => {
-    if (Source) console.log("Source:", Source);
-    if (Destination) console.log("Destination:", Destination);
-  }, [Source, Destination]);
+    user()
+  }, [user]);
 
   return (
     <div>

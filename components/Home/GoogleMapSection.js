@@ -51,6 +51,9 @@ const GoogleMapSection = () => {
             if (status === "OK") {
               setDirections(result);
               const leg = result.routes[0].legs[0];
+              console.log(leg.distance.text)
+              console.log(leg.duration.text)
+
               setDistance(leg.distance.text);
               setDuration(leg.duration.text);
 
